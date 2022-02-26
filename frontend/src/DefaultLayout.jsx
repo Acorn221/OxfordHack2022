@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router';
 import { Link } from 'react-router-dom';
+import AuthenticationButton from './authentication-button';
 
 const DefaultLayout = () => {
   return (
@@ -20,6 +21,9 @@ const DefaultLayout = () => {
           <Link to="/upload">
             <p className="text-md text-white">Upload</p>
           </Link>
+        </div>
+        <div className="w-full h-full flex justify-center items-center">
+          <AuthenticationButton />
         </div>
       </div>
       <Outlet />

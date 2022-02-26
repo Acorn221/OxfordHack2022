@@ -10,7 +10,6 @@ const App = () => {
   return (
     <BrowserRouter>
       <Auth0ProviderWithHistory>
-        <AuthenticationButton />
         <Routes>
           <Route exact path="/" element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
