@@ -17,7 +17,9 @@ const DefaultLayout = () => {
           </Link>
         </div>
         <div className="w-full h-full flex justify-center items-center">
-          <p className="text-md text-white">Profile</p>
+          <Link to="/upload">
+            <p className="text-md text-white">Upload</p>
+          </Link>
         </div>
       </div>
       <Outlet />
