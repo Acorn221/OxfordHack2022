@@ -48,7 +48,7 @@ app.post(
         res
           .status(403)
           .contentType("text/plain")
-          .end("Only "+allowedTypes+" files are allowed!");
+          .end("Only "+allowedTypes.join(' ')+" files are allowed!");
       });
     }
   }
