@@ -2,6 +2,7 @@ const multer = require("multer");
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
+const { v4: uuid } = require('uuid');
 
 const express = require("express");
 const app = express();
@@ -30,7 +31,7 @@ app.post(
   (req, res) => {
     const tempPath = req.file.path;
 		const fileExt = path.extname(req.file.originalname).toLowerCase();
-    const targetPath = path.join(__dirname, "./imageUploads/image"+fileExt);
+    const targetPath = path.join(__dirname, "./imageUploads/"+uuid()+fileExt);
 		
     if (allowedTypes.includes(fileExt)) {
       fs.rename(tempPath, targetPath, err => {
