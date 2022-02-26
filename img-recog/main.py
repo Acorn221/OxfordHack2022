@@ -35,6 +35,9 @@ class UserImage:
 def getOwner(img_in: "Image") -> str:
     for image in img_cache:
         for i in range(len(image.encodings)):
+            if image.img_id == img_in.img_id:
+                continue
+
             res = fr.compare_faces(img_in.encodings, image.encodings[i])
             if True in res:
                 print(f"{img_in.img_id} matches existing image {image.img_id}.")

@@ -1,0 +1,76 @@
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+[2022-02-26 20:54:31,756] ERROR in app: Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 117, in upload
+    return getOwner(UserImage(img_id, data))
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 28, in __init__
+    self.encodings = self._getEncodings(file_name)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 32, in _getEncodings
+    return fr.face_encodings(fr.load_image_file(file_name))
+  File "/home/danny/.local/lib/python3.10/site-packages/face_recognition/api.py", line 86, in load_image_file
+    im = PIL.Image.open(file)
+  File "/usr/lib/python3.10/site-packages/PIL/Image.py", line 2953, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: './images/944b5687-07d3-4c88-9180-385827554935'
+127.0.0.1 - - [26/Feb/2022 20:54:31] "POST //upload HTTP/1.0" 500 -
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+[2022-02-26 20:55:19,977] ERROR in app: Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 117, in upload
+    return getOwner(UserImage(img_id, data))
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 28, in __init__
+    self.encodings = self._getEncodings(file_name)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 32, in _getEncodings
+    return fr.face_encodings(fr.load_image_file(file_name))
+  File "/home/danny/.local/lib/python3.10/site-packages/face_recognition/api.py", line 86, in load_image_file
+    im = PIL.Image.open(file)
+  File "/usr/lib/python3.10/site-packages/PIL/Image.py", line 2953, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: './images/f3ba315b-d14c-41c4-a4d1-9311ebf7f050'
+127.0.0.1 - - [26/Feb/2022 20:55:19] "POST //upload HTTP/1.0" 500 -
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [26/Feb/2022 20:56:30] "POST //upload HTTP/1.0" 400 -
+127.0.0.1 - - [26/Feb/2022 20:56:38] "POST //upload HTTP/1.0" 400 -
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+[2022-02-26 20:57:51,368] ERROR in app: Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/lib/python3.10/site-packages/flask/app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 116, in upload
+    return getOwner(UserImage(img_id, data))
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 28, in __init__
+    self.encodings = self._getEncodings(file_name)
+  File "/home/danny/github/OxfordHack2022/img-recog/main.py", line 32, in _getEncodings
+    return fr.face_encodings(fr.load_image_file(file_name))
+  File "/home/danny/.local/lib/python3.10/site-packages/face_recognition/api.py", line 86, in load_image_file
+    im = PIL.Image.open(file)
+  File "/usr/lib/python3.10/site-packages/PIL/Image.py", line 3008, in open
+    raise UnidentifiedImageError(
+PIL.UnidentifiedImageError: cannot identify image file './images/015574eb-a4ca-4b9e-b7cd-c68fdae3c2fc'
+127.0.0.1 - - [26/Feb/2022 20:57:51] "POST //upload HTTP/1.0" 500 -
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [26/Feb/2022 21:00:44] "POST //upload HTTP/1.0" 200 -
+127.0.0.1 - - [26/Feb/2022 21:00:56] "POST //upload HTTP/1.0" 200 -
+127.0.0.1 - - [26/Feb/2022 21:01:09] "POST //upload HTTP/1.0" 200 -

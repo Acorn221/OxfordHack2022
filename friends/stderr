@@ -1,0 +1,6 @@
+2022/02/26 16:01:33 Starting the friends server...
+2022/02/26 16:01:33 Database configuration: {ell_bends admin qx48c88vwx24 www.djpiper28.co.uk 6445}.
+2022/02/26 16:01:33 Successfully pinged the database, ready to go.
+2022/02/26 16:01:33 Started the friends server on http://127.0.0.1:5001.
+2022/02/26 16:01:33 listen tcp 127.0.0.1:5001: bind: address already in use
+exit status 1
