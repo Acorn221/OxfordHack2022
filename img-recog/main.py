@@ -35,6 +35,16 @@ class Image:
     def _getEncodings(self, file_name: str):
         return fr.face_encodings(fr.load_image_file(file_name))
 
+
+async def getOwner(img_in: "Image") -> str:
+    for image in img_cache:
+        for i in range(len(image.encodings)):
+            res = fr.compare_faces(img_in, image.encodings[i])
+            if True in res:
+                return image.img_id
+    return ""
+
+
 async def getEncodings(file_name: str):
     return fr.face_encodings(fr.load_image_file(file_name))
 
@@ -52,6 +62,7 @@ async def startupLoadImagesToCache() -> None:
         Image(file)
 
     print("Loaded the image cache to RAM")
+
 
 async def runFrTests():
     ret = []
@@ -99,6 +110,15 @@ app = flask.Flask(__name__)
 @app.route("/")
 def index():
     return "running"
+
+
+@app.route("/upload")
+def upload():
+    img_id = flask.request.headers.get("img-id")
+    data = flask.request.data
+
+    img = Image(img_id, data)
+    return getOwner(img)
 
 
 async def main():
