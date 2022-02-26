@@ -4,6 +4,8 @@ import flask
 import asyncio
 import psycopg2
 import json
+import conf
+import jwt
 
 IMG_CACHE: str = "./images/"
 IMG_TEST: str = "./images_test/"
@@ -13,11 +15,14 @@ img_cache = []
 
 
 class UserImage:
-    def __init__(self, img_id: str, img_bytes: bytes) -> None:
+    def __init__(self, img_id: str, img_bytes: bytes, is_pfp: bool) -> None:
         self.img_id = img_id
         file_name: str = IMG_CACHE + self.img_id
 
         if (img_bytes is not None):
+            if is_pfp:
+                file_name += "__pfp__"
+
             # Write the file
             print(f"Saving {file_name} to the local cache")
             f = open(file_name, "wb")
@@ -34,7 +39,7 @@ class UserImage:
         return fr.face_encodings(fr.load_image_file(file_name))
 
 
-def getOwner(img_in: "Image") -> str:
+def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
     matching_img_ids = []
 
     for image in img_cache:
@@ -49,10 +54,31 @@ def getOwner(img_in: "Image") -> str:
 
     # Get the user id
     users = []
+    conn = psycopg2.connect(database=conf.dbname, user=conf.dbuser, password=conf.dbpassword, host=conf.dburl, port=conf.dbport)
+
+    subjects = []
+    cur = conn.cursor()
     for img_id in matching_img_ids:
-        conn = psycopg2.connect(database=conf.dbname, user=conf.dbuser, password=conf.dbpassword, host=conf.dburl, port=conf.dbport)
+        cur.execute("select public.users_in_image.user_id from public.image, public.users_in_image where public.users_in_image.image_uid = %s;", (img_id,))
 
+        rows = cur.fetchall()
+        for row in rows:
+            subject_id, = row
+            if subject_id not in subjects:
+                subjects.append(subject_id)
 
+    cur.execute("insert into public.image(owner_id, captions, uid) values (%s, %s, %s);", (user_id, captions, img_in.img_id, ))
+
+    if is_pfp:
+        cur.execute("update user set pfp_uid = %s where id = %s;", (img_in.img_id, user_id, ))
+
+    conn.commit()
+    conn.close()
+
+    return {
+            "img-id": img_in.img_id,
+            "in-img": subjects
+           }
 
 
 async def getEncodings(file_name: str):
@@ -69,49 +95,9 @@ async def startupLoadImagesToCache() -> None:
 
     for file in files:
         print(f"Loading file {file} to RAM...")
-        UserImage(file, None)
+        UserImage(file, None, "__pfp__" in file)
 
     print("Loaded the image cache to RAM")
-
-
-async def runFrTests():
-    ret = []
-    print("PRE_TESTS: Loading the image cache to RAM...")
-    files = []
-    try:
-        files = os.listdir(IMG_TEST)
-    except:
-        print("PRE_TESTS: No images found")
-        files = os.makedirs(IMG_TEST)
-
-    for _file in files:
-        file = IMG_TEST + _file
-
-        print(f"PRE_TESTS: Loading file {file} to RAM...")
-        ret.append(await getEncodings(file))
-
-    print("PRE_TESTS: Loaded the image cache to RAM")
-
-    print("PRE_TESTS: Checking the image matches")
-    allImgs = await getEncodings("./all.jpg")
-    matches = 0
-
-    for allImg in allImgs:
-        for img in ret:
-            results = fr.compare_faces(img, allImg)
-            if len(results) == 0:
-                continue
-            if results[0]:
-                matches += 1
-
-    print(f"Tests passing: {matches} out of {len(ret)}.")
-
-    johnImg = await getEncodings("./test1.jpg")
-    johnImg2 = await getEncodings("./test2.jpg")
-
-    print(f"Found imgs: {len(johnImg)} {len(johnImg2)}")
-    for img in johnImg:
-        print(fr.compare_faces(johnImg2, img))
 
 
 app = flask.Flask(__name__)
@@ -124,16 +110,16 @@ def index():
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
     img_id = flask.request.headers.get("img-id")
+    caption = flask.request.headers.get("caption")
+    is_pfp = bool(flask.request.headers.get("is-pfp"))
+    user_id = flask.request.headers.get("user-id")
+
     data = flask.request.stream.read()
 
-    return getOwner(UserImage(img_id, data))
+    return getOwner(UserImage(img_id, data, is_pfp), caption, is_pfp, user_id)
 
 
 async def main():
-    if TEST:
-        print("Running pre flight tests")
-        await runFrTests()
-
     print("Setting up the cache")
     await startupLoadImagesToCache()
 
