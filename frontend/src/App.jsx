@@ -7,6 +7,7 @@ import Auth0ProviderWithHistory from './auth0provider';
 import AuthenticationButton from './authentication-button';
 import Posts from './profile/Posts';
 import Photos from './profile/Photos';
+import Friends from './Friends';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
               <Route path="/profile/photos" element={<Photos />} />
             </Route>
             <Route path="/upload" element={<Upload />} />
+            <Route path="/friends" element={<Friends />} />
           </Route>
         </Routes>
       </Auth0ProviderWithHistory>
