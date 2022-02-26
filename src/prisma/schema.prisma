@@ -9,9 +9,9 @@ datasource db {
 
 model user {
   id        Int            @id @default(autoincrement())
-  createdAt DateTime       @default(now())
-  userName  String         @unique @db.VarChar(20)
-  pfpUID    String?        @db.Char(36)
+  created_at DateTime       @default(now())
+  user_name  String         @unique @db.VarChar(20)
+  pfp_uid    String?        @db.Char(36)
   photos    usersInImage[]
   friender  friends[]      @relation("friender")
   friendee  friends[]      @relation("friendee")
@@ -19,9 +19,9 @@ model user {
 }
 
 model image {
-  UID          String         @unique @db.Char(36)
-  Processed    Boolean        @default(false)
-  userRelation usersInImage[]
+  uid          String         @unique @db.Char(36)
+  processed    Boolean        @default(false)
+  user_relation usersInImage[]
   owner        user           @relation("owner", fields: [owner_id], references: [id])
   owner_id     Int
   captions     String
@@ -29,16 +29,16 @@ model image {
 
 model usersInImage {
   id       Int    @id @default(autoincrement())
-  user     user   @relation(fields: [userID], references: [id])
-  userID   Int
-  image    image  @relation(fields: [imageUID], references: [UID])
-  imageUID String @db.Char(36)
+  user     user   @relation(fields: [user_id], references: [id])
+  user_id   Int
+  image    image  @relation(fields: [image_uid], references: [uid])
+  image_uid String @db.Char(36)
 }
 
 model friends {
   id         Int  @id @default(autoincrement())
-  friender   user @relation("friender", fields: [frienderId], references: [id])
-  frienderId Int
-  friendee   user @relation("friendee", fields: [friendeeId], references: [id])
-  friendeeId Int
+  friender   user @relation("friender", fields: [friender_id], references: [id])
+  friender_id Int
+  friendee   user @relation("friendee", fields: [friendee_id], references: [id])
+  friendee_id Int
 }
