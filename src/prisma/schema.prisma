@@ -8,33 +8,37 @@ datasource db {
 }
 
 model user {
-	id        			Int      	@id @default(autoincrement())
-	createdAt 			DateTime 	@default(now())
-	userName 				String 		@unique @db.VarChar(20)
-	pfpUID 					String? 		@db.Char(36)
-	photos usersInImage[]
-	friender friends[] @relation("friender")
-	friendee friends[] @relation("friendee")
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  userName  String         @unique @db.VarChar(20)
+  pfpUID    String?        @db.Char(36)
+  photos    usersInImage[]
+  friender  friends[]      @relation("friender")
+  friendee  friends[]      @relation("friendee")
+  owner     image[]        @relation("owner")
 }
 
 model image {
-	UID String @unique @db.Char(36)
-	Processed Boolean @default(false)
-	userRelation usersInImage[]
+  UID          String         @unique @db.Char(36)
+  Processed    Boolean        @default(false)
+  userRelation usersInImage[]
+  owner        user           @relation("owner", fields: [owner_id], references: [id])
+  owner_id     Int
+  captions     String
 }
 
 model usersInImage {
-	id        Int      @id @default(autoincrement())
-	user 			user @relation(fields: [userID], references: [id])
-	userID 		Int
-	image 		image @relation(fields: [imageUID], references: [UID])
-	imageUID 	String @db.Char(36)
+  id       Int    @id @default(autoincrement())
+  user     user   @relation(fields: [userID], references: [id])
+  userID   Int
+  image    image  @relation(fields: [imageUID], references: [UID])
+  imageUID String @db.Char(36)
 }
 
 model friends {
-	id Int @id @default(autoincrement())
-	friender user @relation("friender", fields: [frienderId], references: [id])
-	frienderId Int
-	friendee user @relation("friendee", fields: [friendeeId], references: [id])
-	friendeeId Int
+  id         Int  @id @default(autoincrement())
+  friender   user @relation("friender", fields: [frienderId], references: [id])
+  frienderId Int
+  friendee   user @relation("friendee", fields: [friendeeId], references: [id])
+  friendeeId Int
 }
