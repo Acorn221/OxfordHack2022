@@ -1,45 +1,30 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import Picture from './Picture';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div className="w-full h-screen bg-slate-900">
+      <div className="w-full h-16 border-b-2 border-slate-200 flex justify-between items-center">
+        <div className="w-full h-full flex justify-center items-center">
+          <p className="text-md text-white">Home</p>
+        </div>
+        <div className="w-full h-full flex justify-center items-center">
+          <p className="text-md text-white">Something</p>
+        </div>
+        <div className="w-full h-full flex justify-center items-center">
+          <p className="text-md text-white">Profile</p>
+        </div>
+      </div>
+      <div className="w-full p-2 grid grid-cols-2 gap-2">
+        <Picture />
+        <Picture />
+        <Picture />
+        <Picture />
+        <Picture />
+        <Picture />
+        <Picture />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
