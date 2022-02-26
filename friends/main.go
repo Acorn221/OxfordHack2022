@@ -34,6 +34,14 @@ type Post struct {
   //in_image []InImage;
 }
 
+type Profile struct {
+	user_name string
+	user_id string
+	user_pfp string
+}
+
+// Utils
+
 var conf = Config {};
 func getconn(config Config) (*sql.DB, error) {
   psqlconn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -71,6 +79,9 @@ func mkError(err string) string {
   ret, _ := json.Marshal(errstruct);
   return string(ret);
 }
+
+
+// Serve funcs
 
 func getfeed(w http.ResponseWriter, r *http.Request) {
   log.Println("Returning the feed");
@@ -135,6 +146,69 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
 
   fmt.Fprintln(w, string(json));
 }
+
+func getprofile(w http.ResponseWriter, r *http.Request) {
+  log.Println("Returning the feed");
+
+	// Connect and select
+	pq, err := getconn(conf);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch random posts"));
+    log.Println(err);
+    return;
+	}
+  defer pq.Close();
+
+	stmt, err := pq.Prepare("select public.user.id, " +
+    "pulic.user.user_name" +
+    "public.user.pfp_uid" +
+  	"from public.user, " +
+  	"where public.user.id = ?;");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch posts "));
+    log.Println(err);
+    return;
+	}
+
+	rows, err := stmt.Query();
+
+	defer rows.Close();
+
+	// Get from table
+	posts := make([]Post, 0);
+  for rows.Next() {
+    var user_name string
+    var user_id string
+    var pfp_uid string
+
+    err := rows.Scan(&user_name,
+      &user_id,
+      &pfp_uid);
+
+		if (err != nil) {
+      fmt.Fprintln(w, mkError("cannot fetch random posts "));
+      log.Println(err);
+      return;
+  	}
+
+		posts = append(posts, Post{user_name: user_name,
+		  user_id: user_id,
+			user_pfp: pfp_uid,
+			image_id: pfp_uid});
+	}
+
+	// To json
+  json, err := json.Marshal(posts);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch random posts "));
+    log.Println(err);
+    return;
+	}
+
+  fmt.Fprintln(w, string(json));
+}
+
+
 
 func main() {
   log.SetFlags(2 | 3);

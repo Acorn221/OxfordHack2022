@@ -112,7 +112,7 @@ def index():
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
     img_id = flask.request.headers.get("img-id")
-    data = flask.request.data
+    data = flask.request.stream.read()
 
     return getOwner(UserImage(img_id, data))
 
