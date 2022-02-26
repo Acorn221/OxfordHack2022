@@ -19,11 +19,11 @@ type Config struct {
   dbport string
 }
 
-type InImage struct {
+/*type InImage struct {
   user_name string
   user_id string
 	user_pfp string
-}
+}*/
 
 type Post struct {
   user_name string
@@ -31,7 +31,7 @@ type Post struct {
   user_pfp string
   image_id string
 
-  in_image []InImage;
+  //in_image []InImage;
 }
 
 var conf = Config {};
