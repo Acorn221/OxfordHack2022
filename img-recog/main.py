@@ -1,4 +1,3 @@
-import requests
 import os
 import face_recognition as fr
 import flask
@@ -11,36 +10,34 @@ TEST: bool = False
 img_cache = []
 
 
-class Image:
-    def __init__(self, img_id: str, img_bytes: bytes):
+class UserImage:
+    def __init__(self, img_id: str, img_bytes: bytes) -> None:
         self.img_id = img_id
         file_name: str = IMG_CACHE + self.img_id
 
-        # Write the file
-        print("Saving {file_name} to the cache")
-        f = open(file_name, "wb")
-        f.write(img_bytes)
-        f.close()
+        if (img_bytes is not None):
+            # Write the file
+            print(f"Saving {file_name} to the local cache")
+            f = open(file_name, "wb")
+            f.write(img_bytes)
+            f.close()
 
-        # Add to the cache
-        print("Adding {file_name} to RAM")
-        self.encodings = self._getEncodings(IMG_CACHE + self.img_id)
-        img_cache.append(self)
-
-    def __init__(self, img_id: str):
+        # Adding to cache
+        print(f"Adding {img_id} to RAM")
         self.img_id = img_id
-        self.encodings = self._getEncodings(IMG_CACHE + self.img_id)
+        self.encodings = self._getEncodings(file_name)
         img_cache.append(self)
 
     def _getEncodings(self, file_name: str):
         return fr.face_encodings(fr.load_image_file(file_name))
 
 
-async def getOwner(img_in: "Image") -> str:
+def getOwner(img_in: "Image") -> str:
     for image in img_cache:
         for i in range(len(image.encodings)):
-            res = fr.compare_faces(img_in, image.encodings[i])
+            res = fr.compare_faces(img_in.encodings, image.encodings[i])
             if True in res:
+                print(f"{img_in.img_id} matches existing image {image.img_id}.")
                 return image.img_id
     return ""
 
@@ -59,7 +56,7 @@ async def startupLoadImagesToCache() -> None:
 
     for file in files:
         print(f"Loading file {file} to RAM...")
-        Image(file)
+        UserImage(file, None)
 
     print("Loaded the image cache to RAM")
 
@@ -112,13 +109,12 @@ def index():
     return "running"
 
 
-@app.route("/upload")
+@app.route("/upload", methods=["POST", "GET"])
 def upload():
     img_id = flask.request.headers.get("img-id")
     data = flask.request.data
 
-    img = Image(img_id, data)
-    return getOwner(img)
+    return getOwner(UserImage(img_id, data))
 
 
 async def main():
