@@ -1,0 +1,11 @@
+[Unit]
+Description=OxfordHack2022 Friends.service
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+ExecStart=/home/danny/github/OxfordHack2022/friends/run.sh
+ExecStop=pkill -f "go run main.go"
+RemainAfterExit=yes
+User=danny
+Group=danny
