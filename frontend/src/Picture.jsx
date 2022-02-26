@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Picture = () => {
+const Picture = ({ pictureUrl, caption }) => {
   return (
     <div className="w-full h-full flex flex-col">
-      <img src="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg" />
+      <img src={pictureUrl} />
       <div className="w-full">
-        <p className="text-sm text-white">Hello World</p>
+        <p className="text-sm text-white">{caption}</p>
       </div>
     </div>
   );
