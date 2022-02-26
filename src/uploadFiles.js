@@ -20,7 +20,8 @@ const handleError = (err, res) => {
 };
 
 const upload = multer({
-  dest: "./uploadsCache/"
+  dest: "./uploadsCache/", 
+	fileSize: '20MB',
   // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
@@ -55,12 +56,13 @@ app.post(
   }
 );
 
+const uploadServer = () => {
+  httpServer.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+  
+  // put the HTML file containing your form in a directory named "public" (relative to where this script is located)
+  app.get("/", express.static(path.join(__dirname, "./public")));
+}
 
-
-
-httpServer.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
-
-// put the HTML file containing your form in a directory named "public" (relative to where this script is located)
-app.get("/", express.static(path.join(__dirname, "./public")));
+export default uploadServer;

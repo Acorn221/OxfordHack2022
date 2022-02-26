@@ -1,2 +1,3 @@
 /node_modules/
 cockroach-v21.2.5.darwin-10.9-amd64
+.env

@@ -1,0 +1,34 @@
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+generator client {
+
+  provider        = "prisma-client-js"
+
+  previewFeatures = ["cockroachdb"]
+
+}
+
+model user {
+	id        			Int      	@id @default(autoincrement())
+	createdAt 			DateTime 	@default(now())
+	publicKey 			String		@default("UNSET") @db.VarChar(256)
+	userName 				String 		@unique @db.VarChar(20)
+	pfpUID 					String? 		@db.Char(36)
+	photos usersInImage[]
+}
+
+model image {
+	UID String @unique @db.Char(36)
+	Processed Boolean @default(false)
+	userRelation usersInImage[]
+}
+
+model usersInImage {
+	id        Int      @id @default(autoincrement())
+	user 			user @relation(fields: [userID], references: [id])
+	userID 		Int
+	image 		image @relation(fields: [imageUID], references: [UID])
+	imageUID 	String @db.Char(36)
+}
