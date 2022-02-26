@@ -22,52 +22,52 @@ const DefaultLayout = () => {
     <div className="w-full min-h-screen bg-slate-900">
       <div className="w-full h-16 border-b-2 border-slate-200 flex justify-between items-center">
         <div className="w-full h-10 flex justify-center items-center">
-          <div
-            className={clsx(
-              'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded',
-              getHighlights('/')
-            )}>
-            <Link to="/">
+          <Link to="/" className="w-full h-full">
+            <div
+              className={clsx(
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                getHighlights('/')
+              )}>
               <p className="text-xl text-white">Home</p>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
         <div className="w-full h-10 flex justify-center items-center">
-          <div
-            className={clsx(
-              'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
-              getHighlights('/profile/posts')
-            )}>
-            <Link to="/profile/posts">
+          <Link to="/profile/posts" className="w-full h-full">
+            <div
+              className={clsx(
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                getHighlights('/profile/posts')
+              )}>
               <p className="text-xl text-white">Profile</p>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
         <div className="w-full h-10 flex justify-center items-center">
-          <div
-            className={clsx(
-              'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded',
-              getHighlights('/upload')
-            )}>
-            <Link to="/upload">
+          <Link to="/upload" className="w-full h-full">
+            <div
+              className={clsx(
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                getHighlights('/upload')
+              )}>
               <p className="text-xl text-white">Upload</p>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
         <div className="w-full h-10 flex justify-center items-center">
-          <div
-            className={clsx(
-              'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded',
-              getHighlights('/friends')
-            )}>
-            <Link to="/friends">
+          <Link to="/friends" className="w-full h-full">
+            <div
+              className={clsx(
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                getHighlights('/friends')
+              )}>
               <p className="text-xl text-white">Friends</p>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
         <div
           className={clsx(
-            'w-full h-full flex justify-center items-center hover:bg-sky-500 rounded'
+            'w-full h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all'
           )}>
           <AuthenticationButton />
         </div>
