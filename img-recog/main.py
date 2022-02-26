@@ -2,6 +2,8 @@ import os
 import face_recognition as fr
 import flask
 import asyncio
+import psycopg2
+import json
 
 IMG_CACHE: str = "./images/"
 IMG_TEST: str = "./images_test/"
@@ -33,6 +35,8 @@ class UserImage:
 
 
 def getOwner(img_in: "Image") -> str:
+    matching_img_ids = []
+
     for image in img_cache:
         for i in range(len(image.encodings)):
             if image.img_id == img_in.img_id:
@@ -41,8 +45,14 @@ def getOwner(img_in: "Image") -> str:
             res = fr.compare_faces(img_in.encodings, image.encodings[i])
             if True in res:
                 print(f"{img_in.img_id} matches existing image {image.img_id}.")
-                return image.img_id
-    return ""
+                matching_img_ids.append(image.img_id)
+
+    # Get the user id
+    users = []
+    for img_id in matching_img_ids:
+        conn = psycopg2.connect(database=conf.dbname, user=conf.dbuser, password=conf.dbpassword, host=conf.dburl, port=conf.dbport)
+
+
 
 
 async def getEncodings(file_name: str):
