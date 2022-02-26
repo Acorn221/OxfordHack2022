@@ -108,7 +108,6 @@ app = flask.Flask(__name__)
 def index():
     return "running"
 
-
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
     img_id = flask.request.headers.get("img-id")
