@@ -10,10 +10,11 @@ datasource db {
 model user {
 	id        			Int      	@id @default(autoincrement())
 	createdAt 			DateTime 	@default(now())
-	publicKey 			String		@default("UNSET") @db.VarChar(256)
 	userName 				String 		@unique @db.VarChar(20)
 	pfpUID 					String? 		@db.Char(36)
 	photos usersInImage[]
+	friender friends[] @relation("friender")
+	friendee friends[] @relation("friendee")
 }
 
 model image {
@@ -28,4 +29,12 @@ model usersInImage {
 	userID 		Int
 	image 		image @relation(fields: [imageUID], references: [UID])
 	imageUID 	String @db.Char(36)
+}
+
+model friends {
+	id Int @id @default(autoincrement())
+	friender user @relation("friender", fields: [frienderId], references: [id])
+	frienderId Int
+	friendee user @relation("friendee", fields: [friendeeId], references: [id])
+	friendeeId Int
 }
