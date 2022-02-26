@@ -1,5 +1,7 @@
 import React from 'react';
-import Picture from './Picture';
+import { Outlet } from 'react-router';
+import { Link } from 'react-router-dom';
+
 const Profile = () => {
   return (
     <div className="w-full flex flex-col">
@@ -13,38 +15,20 @@ const Profile = () => {
           <h1 className="text-7xl text-white">John Costa</h1>
         </div>
       </div>
-      <div className="my-32 w-full px-4 flex flex-col justify-center items-center gap-16">
-        <Picture
-          subject="Danny"
-          photographer="John"
-          caption="Caption #1"
-          pictureUrl="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg"
-        />
-        <Picture
-          subject="Danny"
-          photographer="John"
-          caption="Caption #1"
-          pictureUrl="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg"
-        />
-        <Picture
-          subject="Danny"
-          photographer="John"
-          caption="Caption #1"
-          pictureUrl="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg"
-        />
-        <Picture
-          subject="Danny"
-          photographer="John"
-          caption="Caption #1"
-          pictureUrl="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg"
-        />
-        <Picture
-          subject="Danny"
-          photographer="John"
-          caption="Caption #1"
-          pictureUrl="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg"
-        />
+      <div className="w-full h-36" />
+      <div className="w-full h-12 flex justify-center items-center">
+        <div className="w-full">
+          <Link to="/profile/posts">
+            <p className="text-2xl text-center text-white">My Posts</p>
+          </Link>
+        </div>
+        <div className="w-full">
+          <Link to="/profile/photos">
+            <p className="text-2xl text-center text-white">My Photos</p>
+          </Link>
+        </div>
       </div>
+      <Outlet />
     </div>
   );
 };

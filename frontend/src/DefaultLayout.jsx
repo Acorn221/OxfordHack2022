@@ -13,7 +13,7 @@ const DefaultLayout = () => {
           </Link>
         </div>
         <div className="w-full h-full flex justify-center items-center">
-          <Link to="/profile">
+          <Link to="/profile/posts">
             <p className="text-xl text-white">Profile</p>
           </Link>
         </div>
