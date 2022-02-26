@@ -19,8 +19,19 @@ type Config struct {
   dbport string
 }
 
+type InImage struct {
+  user_name string
+  user_id string
+	user_pfp string
+}
+
 type Post struct {
-  id string
+  user_name string
+  user_id string
+  user_pfp string
+  image_id string
+
+  in_image []InImage;
 }
 
 var conf = Config {};
@@ -51,21 +62,37 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintln(w, "running");
 }
 
-func getrandomposts(w http.ResponseWriter, r *http.Request) {
-  log.Println("Returning random posts");
+type Err struct {
+  errmsg string
+};
+
+func mkError(err string) string {
+  errstruct := Err{errmsg: err};
+  ret, _ := json.Marshal(errstruct);
+  return string(ret);
+}
+
+func getfeed(w http.ResponseWriter, r *http.Request) {
+  log.Println("Returning the feed");
 
 	// Connect and select
 	pq, err := getconn(conf);
 	if (err != nil) {
-    fmt.Fprintln(w, "{\"error\":\"cannot fetch random posts\"");
+    fmt.Fprintln(w, mkError("cannot fetch random posts"));
     log.Println(err);
     return;
 	}
   defer pq.Close();
 
-	rows, err := pq.Query("select id from post limit 25;");
+	rows, err := pq.Query("select public.user.user_name, " +
+	"public.user.id, public.user.pfp_uid, public.image.uid, " +
+	"public.users_in_image.user_id " +
+	"from public.user, " +
+	"public.image, public.users_in_image " +
+	"where public.image.processed = true and " +
+	"public.image.uid = public.users_in_image.image_uid limit 25;");
 	if (err != nil) {
-    fmt.Fprintln(w, "{\"error\":\"cannot fetch random posts\"");
+    fmt.Fprintln(w, mkError("cannot fetch posts "));
     log.Println(err);
     return;
 	}
@@ -73,24 +100,35 @@ func getrandomposts(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close();
 
 	// Get from table
-	var posts []Post;
+	posts := make([]Post, 0);
   for rows.Next() {
-	  var post_id string;
-		err := rows.Scan(&post_id);
+    var user_name string
+    var user_id string
+    var pfp_uid string
+    var uid string
+
+    err := rows.Scan(&user_name,
+      &user_id,
+      &pfp_uid,
+      &uid,
+      &user_id);
 
 		if (err != nil) {
-      fmt.Fprintln(w, "{\"error\":\"cannot fetch random posts\"");
+      fmt.Fprintln(w, mkError("cannot fetch random posts "));
       log.Println(err);
       return;
   	}
 
-		_ = append(posts, Post{id: post_id});
+		posts = append(posts, Post{user_name: user_name,
+		  user_id: user_id,
+			user_pfp: pfp_uid,
+			image_id: pfp_uid});
 	}
 
 	// To json
   json, err := json.Marshal(posts);
 	if (err != nil) {
-    fmt.Fprintln(w, "{\"error\":\"cannot fetch random posts\"");
+    fmt.Fprintln(w, mkError("cannot fetch random posts "));
     log.Println(err);
     return;
 	}
@@ -132,7 +170,7 @@ func main() {
 
   // Setup and start the server
   http.HandleFunc("/", statusHandler);
-  http.HandleFunc("/rand", getrandomposts);
+  http.HandleFunc("/getfeed", getfeed);
   log.Fatal(http.ListenAndServe(bindaddr, nil));
 }
 
