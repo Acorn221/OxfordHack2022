@@ -8,37 +8,37 @@ datasource db {
 }
 
 model user {
-  id        Int            @id @default(autoincrement())
-  created_at DateTime       @default(now())
-  user_name  String         @unique @db.VarChar(20)
-  pfp_uid    String?        @db.Char(36)
-  photos    users_in_image[]
-  friender  friends[]      @relation("friender")
-  friendee  friends[]      @relation("friendee")
-  owner     image[]        @relation("owner")
+  id         Int              @id @default(autoincrement())
+  created_at DateTime         @default(now())
+  user_name  String           @unique @db.VarChar(20)
+  pfp_uid    String?          @db.Char(36)
+  photos     users_in_image[]
+  friender   friends[]        @relation("friender")
+  friendee   friends[]        @relation("friendee")
+  owner      image[]          @relation("owner")
 }
 
 model image {
-  uid          String         @unique @db.Char(36)
-  processed    Boolean        @default(false)
+  uid           String           @unique @db.Char(36)
+  processed     Boolean          @default(false)
   user_relation users_in_image[]
-  owner        user           @relation("owner", fields: [owner_id], references: [id])
-  owner_id     Int
-  captions     String
+  owner         user             @relation("owner", fields: [owner_id], references: [id])
+  owner_id      Int
+  captions      String
 }
 
 model users_in_image {
-  id       Int    @id @default(autoincrement())
-  user     user   @relation(fields: [user_id], references: [id])
+  id        Int    @id @default(autoincrement())
+  user      user   @relation(fields: [user_id], references: [id])
   user_id   Int
-  image    image  @relation(fields: [image_uid], references: [uid])
+  image     image  @relation(fields: [image_uid], references: [uid])
   image_uid String @db.Char(36)
 }
 
 model friends {
-  id         Int  @id @default(autoincrement())
-  friender   user @relation("friender", fields: [friender_id], references: [id])
+  id          Int  @id @default(autoincrement())
+  friender    user @relation("friender", fields: [friender_id], references: [id])
   friender_id Int
-  friendee   user @relation("friendee", fields: [friendee_id], references: [id])
+  friendee    user @relation("friendee", fields: [friendee_id], references: [id])
   friendee_id Int
 }
