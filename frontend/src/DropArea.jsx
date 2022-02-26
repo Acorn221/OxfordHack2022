@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const DropArea = () => {
   const [fileNames, setFileNames] = useState([]);
+  const ispfp = false;
   const handleDrop = (files) => {
     console.log(files);
     //var formData = new FormData();
@@ -17,6 +18,9 @@ const DropArea = () => {
         'img-id': uuidv4(),
       },
     });
+  };
+  const handleIsPFPChange = (evt) => {
+    this.ispfp = evt.target.checked;
   };
   return (
     <Dropzone onDrop={handleDrop}>
@@ -38,6 +42,8 @@ const DropArea = () => {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
               />
             </svg>
+            ispfp:
+            <input type="checkbox" checked={ispfp} onChange={(env) => {this.checked = !this.checked}}></input>
           </p>
         </div>
       )}
