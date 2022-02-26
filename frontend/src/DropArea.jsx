@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
-import uploadURL from './variables';
+import { uploadURL}  from './variables';
 import { v4 as uuidv4 } from 'uuid';
 
 
