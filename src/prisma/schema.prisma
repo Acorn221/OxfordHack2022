@@ -12,7 +12,7 @@ model user {
   created_at DateTime       @default(now())
   user_name  String         @unique @db.VarChar(20)
   pfp_uid    String?        @db.Char(36)
-  photos    usersInImage[]
+  photos    users_in_image[]
   friender  friends[]      @relation("friender")
   friendee  friends[]      @relation("friendee")
   owner     image[]        @relation("owner")
@@ -21,13 +21,13 @@ model user {
 model image {
   uid          String         @unique @db.Char(36)
   processed    Boolean        @default(false)
-  user_relation usersInImage[]
+  user_relation users_in_image[]
   owner        user           @relation("owner", fields: [owner_id], references: [id])
   owner_id     Int
   captions     String
 }
 
-model usersInImage {
+model users_in_image {
   id       Int    @id @default(autoincrement())
   user     user   @relation(fields: [user_id], references: [id])
   user_id   Int
