@@ -1,0 +1,11 @@
+[Unit]
+Description=OxfordHack2022 Image Recognition Service 
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+ExecStart=/home/danny/github/OxfordHack2022/img-recog/run.sh
+ExecStop=pkill -f main.py
+RemainAfterExit=yes
+User=danny
+Group=danny

@@ -1,4 +1,5 @@
 images/
 *.pyc
 __pycache__/
+stderr
 
