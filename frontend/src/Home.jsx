@@ -27,14 +27,14 @@ const Home = () => {
   return (
     <div className="w-full grid grid-cols-12">
       <div className="col-span-10 w-full flex flex-col justify-center items-center">
-        <h1 className="text-3xl text-white">Recent Posts</h1>
+        <h1 className="text-4xl text-white">Recent Posts</h1>
         <div className="w-full px-4 flex flex-col justify-center items-center gap-16">
           {feed.map((item) => (
             <Picture
               key={item['Image_id']}
               photographer={item['User_name']}
               subject={getPeopleInPicture(item['In_image'])}
-				      pictureUrl={"http://localhost/cdn/" + item['Image_id']}
+              pictureUrl={'http://localhost/cdn/' + item['Image_id']}
             />
           ))}
         </div>
