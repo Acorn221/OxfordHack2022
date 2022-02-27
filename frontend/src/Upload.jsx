@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Dropzone from './DropArea';
 
 const Upload = () => {
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState('44441');
 
   return (
     <div className="w-full h-screen">
