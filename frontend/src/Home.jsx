@@ -11,7 +11,7 @@ const Home = () => {
   const [feed, setFeed] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost/api/getfeed').then((response) => {
+    axios.get('https://hack.djpiper28.co.uk/api/getfeed').then((response) => {
       setFeed(response.data);
     });
   }, []);
@@ -34,7 +34,7 @@ const Home = () => {
               key={item['Image_id']}
               photographer={item['User_name']}
               subject={getPeopleInPicture(item['In_image'])}
-              pictureUrl={'http://localhost/cdn/' + item['Image_id'] + ".jpg"}
+              pictureUrl={'https://hack.djpiper28.co.uk/cdn/' + item['Image_id'] + ".jpg"}
             />
           ))}
         </div>
