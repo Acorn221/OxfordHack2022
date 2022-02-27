@@ -25,7 +25,7 @@ const DefaultLayout = () => {
           <Link to="/" className="w-full h-full">
             <div
               className={clsx(
-                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 hover:animate-spin rounded transition-all',
                 getHighlights('/')
               )}>
               <p className="text-xl text-white">Home</p>
@@ -36,7 +36,7 @@ const DefaultLayout = () => {
           <Link to="/profile/posts" className="w-full h-full">
             <div
               className={clsx(
-                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 hover:animate-spin rounded transition-all',
                 getHighlights('/profile/posts')
               )}>
               <p className="text-xl text-white">Profile</p>
@@ -47,7 +47,7 @@ const DefaultLayout = () => {
           <Link to="/upload" className="w-full h-full">
             <div
               className={clsx(
-                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 hover:animate-spin rounded transition-all',
                 getHighlights('/upload')
               )}>
               <p className="text-xl text-white">Upload</p>
@@ -58,7 +58,7 @@ const DefaultLayout = () => {
           <Link to="/friends" className="w-full h-full">
             <div
               className={clsx(
-                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all',
+                'w-1/2 h-full flex justify-center items-center hover:bg-sky-500 hover:animate-spin rounded transition-all',
                 getHighlights('/friends')
               )}>
               <p className="text-xl text-white">Friends</p>
@@ -67,7 +67,7 @@ const DefaultLayout = () => {
         </div>
         <div
           className={clsx(
-            'w-full h-full flex justify-center items-center hover:bg-sky-500 rounded transition-all'
+            'w-full h-full flex justify-center items-center hover:bg-sky-500 hover:animate-spin rounded transition-all'
           )}>
           <AuthenticationButton />
         </div>
