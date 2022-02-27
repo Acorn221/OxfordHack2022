@@ -5,7 +5,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Friends from './Friends';
 
 const Home = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { user } = useAuth0();
+  console.log(user);
 
   return (
     <div className="w-full grid grid-cols-12">
