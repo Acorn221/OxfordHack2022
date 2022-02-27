@@ -3,10 +3,16 @@ import Picture from './Picture';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import Friends from './Friends';
+import axios from 'axios';
 
 const Home = () => {
   const { user } = useAuth0();
-  console.log(user);
+
+  useEffect(() => {
+    axios.get('/api/getfeed').then((response) => {
+      console.log(response);
+    });
+  }, []);
 
   return (
     <div className="w-full grid grid-cols-12">
