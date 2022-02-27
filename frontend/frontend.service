@@ -1,0 +1,11 @@
+[Unit]
+Description=OxfordHack2022 Frontend.service
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+ExecStart=/home/danny/github/OxfordHack2022/frontend/run.sh
+ExecStop=pkill -f "npm run dev"
+RemainAfterExit=yes
+User=danny
+Group=danny
