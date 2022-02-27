@@ -69,7 +69,7 @@ def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
     subjects = []
     cur = conn.cursor()
     for img_id in matching_img_ids:
-        cur.execute("select public.image.owner_id from public.users_in_image where public.image.uid = %s;", (img_id,))
+        cur.execute("select public.image.owner_id from public.image where public.image.uid = %s;", (img_id,))
 
         rows = cur.fetchall()
         for row in rows:

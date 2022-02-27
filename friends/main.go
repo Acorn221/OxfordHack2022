@@ -75,6 +75,62 @@ func mkError(err string) string {
 
 
 // Serve funcs
+func mkuser(w http.ResponseWriter, r *http.Request) {
+  log.Println("Making a user");
+
+	// Connect and select
+	pq, err := getconn(conf);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("making a user"));
+    log.Println(err);
+    return;
+	}
+  defer pq.Close();
+
+	stmt, err := pq.Prepare("insert into public.user(user_name) values ($1);");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("making a user"));
+    log.Println(err);
+    return;
+	}
+
+	defer stmt.Close();
+
+	_, err = stmt.Exec(r.Header.Get("user_name"));
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("making a user"));
+    log.Println(err);
+    return;
+	}
+
+	stmt, err = pq.Prepare("select id from public.user where user_name = $1;");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("making a user"));
+    log.Println(err);
+    return;
+	}
+
+	defer stmt.Close();
+
+	rows, err := stmt.Query(r.Header.Get("user_name"));
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("making a user"));
+    log.Println(err);
+    return;
+	}
+
+	defer rows.Close();
+	
+	for rows.Next() {
+		var id int
+		rows.Scan(&id);
+
+		fmt.Fprintf(w, "{\"id\": %d}", id);
+		return;
+	}
+
+	fmt.Fprintln(w, mkError("Something went wrong - idk mate"));
+}
 
 func getfeed(w http.ResponseWriter, r *http.Request) {
   log.Println("Returning the feed");
@@ -195,6 +251,7 @@ func getprofile(w http.ResponseWriter, r *http.Request) {
 	}
   defer pq.Close();
 
+	user_id := r.Header.Get("user_id");
 	stmt, err := pq.Prepare("select public.user.user_name, " +
   	"public.user.id, public.user.pfp_uid, public.image.uid " +
   	"from public.user, " +
@@ -208,7 +265,7 @@ func getprofile(w http.ResponseWriter, r *http.Request) {
     return;
 	}
 
-	rows, err := stmt.Query("CHANGE ME");
+	rows, err := stmt.Query(user_id);
 	if (err != nil) {
     fmt.Fprintln(w, mkError("cannot fetch posts for a profile"));
     log.Println(err);
@@ -334,6 +391,7 @@ func main() {
   http.HandleFunc("/", statusHandler);
   http.HandleFunc("/getfeed", getfeed);
   http.HandleFunc("/getprofile", getprofile);
+  http.HandleFunc("/mkaccount", mkuser);
   log.Fatal(http.ListenAndServe(bindaddr, nil));
 }
 
