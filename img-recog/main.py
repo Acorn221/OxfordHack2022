@@ -71,7 +71,7 @@ def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
             if subject_id not in subjects:
                 subjects.append(subject_id)
 
-    cur.execute("insert into public.image(owner_id, captions, uid) values (%s, %s, %s);", (user_id, captions, img_in.img_id, ))
+    cur.execute("insert into public.image(owner_id, captions, uid, processed) values (%s, %s, %s, %s);", (user_id, captions, img_in.img_id, True,))
 
     if is_pfp:
         cur.execute("update user set pfp_uid = %s where id = %s;", (img_in.img_id, user_id, ))
