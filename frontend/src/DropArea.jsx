@@ -16,7 +16,9 @@ const DropArea = () => {
       body: files[0],
       headers: {
         'img-id': uuidv4(),
-        'is_pfp': true// TODO: change this to false!
+        'is_pfp': true,// TODO: change this to false!
+        "caption": "urine",
+        "user_id": "fake for now"
       },
     });
   };
