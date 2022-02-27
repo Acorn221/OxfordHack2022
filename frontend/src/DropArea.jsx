@@ -4,7 +4,7 @@ import { uploadURL } from './variables';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const DropArea = () => {
+const DropArea = ({ userId }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const { user } = useAuth0();
@@ -16,7 +16,7 @@ const DropArea = () => {
       headers: {
         'img-id': uuidv4(),
         is_pfp: isChecked,
-        'user-id': user.sub,
+        'user-id': userId,
         caption: 'Test caption',
       },
     });
