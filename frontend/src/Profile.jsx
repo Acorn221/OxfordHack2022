@@ -1,3 +1,4 @@
+import { useElements, useStripe } from '@stripe/react-stripe-js';
 import React from 'react';
 import { Outlet } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -16,6 +17,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="w-full h-36" />
+      <button onClick={() => testPayment()}>Testing Stripe</button>
       <div className="w-full h-12 flex justify-center items-center">
         <div className="w-full">
           <Link to="/profile/posts">
