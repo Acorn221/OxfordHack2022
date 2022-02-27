@@ -9,7 +9,7 @@ const Home = () => {
   const { user } = useAuth0();
 
   useEffect(() => {
-    axios.get('/api/getfeed').then((response) => {
+    axios.get('http://localhost/api/getfeed').then((response) => {
       console.log(response);
     });
   }, []);
