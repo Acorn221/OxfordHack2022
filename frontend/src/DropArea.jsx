@@ -10,7 +10,9 @@ const DropArea = ({ userId }) => {
   const { user } = useAuth0();
 
   const handleDrop = async (files) => {
-    fetch(uploadURL, {
+    console.log(user)
+
+    fetch('http://localhost/img/upload', {
       method: 'POST',
       body: files[0],
       headers: {
