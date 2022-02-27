@@ -7,7 +7,7 @@ const Picture = ({ subject, photographer, pictureUrl, caption }) => {
         <p className="text-5xl text-white">{subject}</p>
         <p className="text-5xl text-white">Taken by: {photographer}</p>
       </div>
-      <img className="object-contain" src={pictureUrl} />
+      <img className="object-contain animate-spin duration-1000" src={pictureUrl} />
       <div className="w-full">
         <p className="text-3xl text-white">{caption}</p>
       </div>
