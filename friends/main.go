@@ -92,7 +92,8 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
   	"public.user.id, public.user.pfp_uid, public.image.uid " +
   	"from public.user, " +
   	"public.image " +
-  	"where public.image.processed = true limit 25;");
+  	"where public.image.processed = true and " +
+  	"public.image.owner_id = public.user.id limit 25;");
 	if (err != nil) {
     fmt.Fprintln(w, mkError("cannot fetch posts"));
     log.Println(err);
@@ -183,7 +184,119 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
 }
 
 func getprofile(w http.ResponseWriter, r *http.Request) {
-  log.Println("FIX ME");
+  log.Println("Returning the feed for a profile");
+
+	// Connect and select
+	pq, err := getconn(conf);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch random posts for a profile"));
+    log.Println(err);
+    return;
+	}
+  defer pq.Close();
+
+	stmt, err := pq.Prepare("select public.user.user_name, " +
+  	"public.user.id, public.user.pfp_uid, public.image.uid " +
+  	"from public.user, " +
+  	"public.image " +
+  	"where public.image.processed = true and " +
+  	"public.image.owner_id = public.user.id and " +
+  	"public.user.id = $1 limit 25;");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch posts for a profile"));
+    log.Println(err);
+    return;
+	}
+
+	rows, err := stmt.Query("CHANGE ME");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch posts for a profile"));
+    log.Println(err);
+    return;
+	}
+
+	defer rows.Close();
+
+  // Get from table
+  posts := make([]Post, 0);
+  for rows.Next() {
+    var user_name string
+    var user_id string
+    var pfp_uid string
+    var img_id string
+    in_img := make([]Profile, 0);
+
+  	// Put the rest of the data in the struct
+    err = rows.Scan(&user_name,
+      &user_id,
+      &pfp_uid,
+      &img_id);
+
+		if (err != nil) {
+      fmt.Fprintln(w, mkError("cannot fetch random posts for a profile"));
+      log.Println(err);
+      return;
+  	}
+	
+  	// Get the in image crap	
+  	stmt, err := pq.Prepare("select public.user.id, " +
+      "public.user.user_name, " +
+      "public.user.pfp_uid " +
+      "from public.user, public.users_in_image, public.image " +
+      "where public.user.id = public.users_in_image.user_id and " +
+    	"public.users_in_image.image_uid = public.image.uid and " +
+    	"public.image.uid = $1;");
+    if (err != nil) {
+      fmt.Fprintln(w, mkError("cannot fetch profile for a profile"));
+      log.Println(err);
+		  return;
+    }
+
+  	rows_inner, err := stmt.Query(img_id);
+    defer rows_inner.Close();
+
+    for rows_inner.Next() {
+      var user_name_ string
+      var user_id_ string
+      var pfp_uid_ string
+
+      err = rows_inner.Scan(&user_name_,
+        &user_id_,
+        &pfp_uid_);
+      if (err != nil) {
+  		  fmt.Fprintln(w, mkError("cannot fetch profile for a profile"));
+	      log.Println(err);
+		    return;
+	    }
+
+      profile := Profile{User_name: user_name_,
+        User_id: user_id_,
+  	    User_pfp: pfp_uid_};
+      in_img = append(in_img, profile);
+	  }
+
+	  // Insert the whole post
+    post := Post{User_name: user_name,
+  	  User_id: user_id,
+    	User_pfp: pfp_uid,
+			Image_id: img_id,
+    	In_image: in_img};
+	  posts = append(posts, post);
+	}
+
+	// To json
+  jsonret, err := json.Marshal(posts);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch random posts for a profile"));
+    log.Println(err);
+    return;
+	}
+
+	log.Printf("Returned %d results.\n", len(posts));
+
+	ret := string(jsonret);
+  fmt.Fprintln(w, ret);
+}
 
 func main() {
   log.SetFlags(2 | 3);

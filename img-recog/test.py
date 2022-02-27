@@ -26,6 +26,7 @@ def main():
 
     conn = psycopg2.connect(database=conf.dbname, user=conf.dbuser, password=conf.dbpassword, host=conf.dburl, port=conf.dbport)
     cur = conn.cursor()
+    cur.execute("delete from users_in_image where true;")
     cur.execute("delete from public.image where true;")
     cur.execute("delete from public.user where true;")
 
@@ -46,7 +47,7 @@ def main():
         uid = uuid.uuid4()
 
         print(f"Inserting image {uid} for {user_name}")
-        cur.execute("insert into public.image(captions, owner_id, processed, uid) values(%s, %s, %s, %s);", ("test data", user_id, True, user_pfp.split("__pfp__")[0]))
+        cur.execute("insert into public.image(captions, owner_id, processed, uid) values(%s, %s, %s, %s);", ("test data", user_id, True, user_pfp))
 
         print(f"Updating the pfp")
         cur.execute("update public.user set pfp_uid = %s where id = %s;", (user_pfp, user_id))
