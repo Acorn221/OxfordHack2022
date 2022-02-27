@@ -33,7 +33,7 @@ const Home = () => {
             <Picture
               key={item['Image_id']}
               photographer={item['User_name']}
-              subject={getPeopleInPicture(item['In_image'])}
+              subject={Math.random()}
               pictureUrl={'http://localhost/cdn/' + item['Image_id']}
             />
           ))}
