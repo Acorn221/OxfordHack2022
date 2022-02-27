@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@prisma/client": "^3.10.0",
+    "express": "^4.17.3",
+    "multer": "^1.4.4",
+    "prisma": "^3.10.0",
+    "uuid": "^8.3.2",
+    "ws": "^8.5.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "prisma:generate": "npx prisma generate --schema=src/prisma/schema.prisma",
+    "prisma:push": "npx prisma db push --schema=src/prisma/schema.prisma",
+    "addTestData": "node src/addTestData.js"
+  }
+}

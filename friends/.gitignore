@@ -1,0 +1,5 @@
+.env
+*.out
+friends
+stderr
+
