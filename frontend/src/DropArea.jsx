@@ -17,6 +17,7 @@ const DropArea = () => {
         'img-id': uuidv4(),
         is_pfp: isChecked,
         'user-id': user.sub,
+        caption: 'Test caption',
       },
     });
   };
