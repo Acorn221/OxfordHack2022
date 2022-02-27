@@ -19,7 +19,7 @@ const Home = () => {
   const getPeopleInPicture = (usersArray) => {
     let subjects = '';
     for (let user of usersArray) {
-      subjects += user + ' ';
+      subjects += user['User_id'] + ' ';
     }
     return subjects;
   };
@@ -34,6 +34,7 @@ const Home = () => {
               key={item['Image_id']}
               photographer={item['User_name']}
               subject={getPeopleInPicture(item['In_image'])}
+				      pictureUrl={"http://localhost/cdn/" + item['Image_id']}
             />
           ))}
         </div>

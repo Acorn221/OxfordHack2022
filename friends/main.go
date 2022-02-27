@@ -183,70 +183,7 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
 }
 
 func getprofile(w http.ResponseWriter, r *http.Request) {
-  log.Println("Returning the profile");
-
-	// Connect and select
-	pq, err := getconn(conf);
-	if (err != nil) {
-    fmt.Fprintln(w, mkError("cannot fetch profile"));
-    log.Println(err);
-    return;
-	}
-  defer pq.Close();
-
-	stmt, err := pq.Prepare("select public.user.id, " +
-    "public.user.user_name" +
-    "public.user.pfp_uid" +
-  	"from public.user, " +
-  	"where public.user.id = ?;");
-	if (err != nil) {
-    fmt.Fprintln(w, mkError("cannot fetch profile"));
-    log.Println(err);
-    return;
-	}
-
-	rows, err := stmt.Query("CHANGE ME");
-
-	defer rows.Close();
-
-	// Get from table
-	profiles := make([]Post, 0);
-  for rows.Next() {
-    var user_name string
-    var user_id string
-    var pfp_uid string
-
-    err := rows.Scan(&user_name,
-      &user_id,
-      &pfp_uid);
-
-		if (err != nil) {
-      fmt.Fprintln(w, mkError("cannot fetch random profile"));
-      log.Println(err);
-      return;
-  	}
-
-		profiles = append(profiles, Post{User_name: user_name,
-		  User_id: user_id,
-			User_pfp: pfp_uid,
-			Image_id: pfp_uid});
-	}
-
-	log.Printf("Found %d profiles, expected 1.\n", len(profiles));
-
-	// To json
-  json, err := json.Marshal(profiles);
-	if (err != nil) {
-    fmt.Fprintln(w, mkError("cannot fetch random profile"));
-    log.Println(err);
-    return;
-	}
-
-  ret := string(json);
-  fmt.Fprintln(w, ret);
-}
-
-
+  log.Println("FIX ME");
 
 func main() {
   log.SetFlags(2 | 3);
