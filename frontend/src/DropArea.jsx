@@ -6,11 +6,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const DropArea = ({ userId }) => {
   const [isChecked, setIsChecked] = useState(false);
+  const [caption, setCaption] = useState('');
 
   const { user } = useAuth0();
 
   const handleDrop = async (files) => {
-    console.log(user)
+    console.log(user);
 
     fetch('http://localhost/img/upload', {
       method: 'POST',
@@ -19,9 +20,13 @@ const DropArea = ({ userId }) => {
         'img-id': uuidv4(),
         is_pfp: isChecked,
         'user-id': userId,
-        caption: 'Test caption',
+        caption: caption,
       },
-    });
+    })
+      .then(() => {
+        alert('Uploaded!');
+      })
+      .catch((e) => alert(e));
   };
   return (
     <>
@@ -55,6 +60,7 @@ const DropArea = ({ userId }) => {
       <div className="px-64 w-full h-16 flex justify-center items-center">
         <input type="checkbox" value={isChecked} onChange={() => setIsChecked(!isChecked)} />
         <p className="text-xl">Profile Picture</p>
+        <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)} />
       </div>
     </>
   );
