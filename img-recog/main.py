@@ -33,11 +33,12 @@ class UserImage:
             f.write(img_bytes)
             f.close()
 
-        # Adding to cache
-        print(f"Adding {img_id} to RAM")
-        self.img_id = img_id
-        self.encodings = self._getEncodings(file_name)
-        img_cache.append(self)
+        if is_pfp:
+            # Adding to cache
+            print(f"Adding {img_id} to RAM")
+            self.img_id = img_id
+            self.encodings = self._getEncodings(file_name)
+            img_cache.append(self)
 
     def _getEncodings(self, file_name: str):
         return fr.face_encodings(fr.load_image_file(file_name))
@@ -70,6 +71,7 @@ def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
             subject_id, = row
             if subject_id not in subjects:
                 subjects.append(subject_id)
+                cur.execute("insert into public.users_in_image(user_id, image_uid) values (%s, %s);", (subject_id, img_in.img_id))
 
     cur.execute("insert into public.image(owner_id, captions, uid, processed) values (%s, %s, %s, %s);", (user_id, captions, img_in.img_id, True,))
 
