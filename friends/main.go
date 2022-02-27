@@ -26,13 +26,21 @@ type Config struct {
 }*/
 
 type Post struct {
-  user_name string
-  user_id string
-  user_pfp string
-  image_id string
+  User_name string
+  User_id string
+  User_pfp string
+  Image_id string
 
   //in_image []InImage;
 }
+
+type Profile struct {
+	User_name string
+	User_id string
+	User_pfp string
+}
+
+// Utils
 
 var conf = Config {};
 func getconn(config Config) (*sql.DB, error) {
@@ -72,6 +80,9 @@ func mkError(err string) string {
   return string(ret);
 }
 
+
+// Serve funcs
+
 func getfeed(w http.ResponseWriter, r *http.Request) {
   log.Println("Returning the feed");
 
@@ -85,14 +96,12 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
   defer pq.Close();
 
 	rows, err := pq.Query("select public.user.user_name, " +
-	"public.user.id, public.user.pfp_uid, public.image.uid, " +
-	"public.users_in_image.user_id " +
-	"from public.user, " +
-	"public.image, public.users_in_image " +
-	"where public.image.processed = true and " +
-	"public.image.uid = public.users_in_image.image_uid limit 25;");
+  	"public.user.id, public.user.pfp_uid " +
+  	"from public.user, " +
+  	"public.image " +
+  	"where public.image.processed = true limit 25;");
 	if (err != nil) {
-    fmt.Fprintln(w, mkError("cannot fetch posts "));
+    fmt.Fprintln(w, mkError("cannot fetch posts"));
     log.Println(err);
     return;
 	}
@@ -105,36 +114,103 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
     var user_name string
     var user_id string
     var pfp_uid string
-    var uid string
 
     err := rows.Scan(&user_name,
       &user_id,
-      &pfp_uid,
-      &uid,
-      &user_id);
+      &pfp_uid);
 
 		if (err != nil) {
-      fmt.Fprintln(w, mkError("cannot fetch random posts "));
+      fmt.Fprintln(w, mkError("cannot fetch random posts"));
       log.Println(err);
       return;
   	}
 
-		posts = append(posts, Post{user_name: user_name,
-		  user_id: user_id,
-			user_pfp: pfp_uid,
-			image_id: pfp_uid});
+    post := Post{User_name: user_name,
+		  User_id: user_id,
+			User_pfp: pfp_uid,
+			Image_id: pfp_uid}
+		posts = append(posts, post);
 	}
 
 	// To json
-  json, err := json.Marshal(posts);
+  jsonret, err := json.Marshal(posts);
 	if (err != nil) {
-    fmt.Fprintln(w, mkError("cannot fetch random posts "));
+    fmt.Fprintln(w, mkError("cannot fetch random posts"));
     log.Println(err);
     return;
 	}
 
-  fmt.Fprintln(w, string(json));
+	log.Printf("Returned %d results.\n", len(posts));
+
+	ret := string(jsonret);
+  fmt.Fprintln(w, ret);
 }
+
+func getprofile(w http.ResponseWriter, r *http.Request) {
+  log.Println("Returning the profile");
+
+	// Connect and select
+	pq, err := getconn(conf);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch profile"));
+    log.Println(err);
+    return;
+	}
+  defer pq.Close();
+
+	stmt, err := pq.Prepare("select public.user.id, " +
+    "public.user.user_name" +
+    "public.user.pfp_uid" +
+  	"from public.user, " +
+  	"where public.user.id = ?;");
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch profile"));
+    log.Println(err);
+    return;
+	}
+
+	rows, err := stmt.Query();
+
+	defer rows.Close();
+
+	// Get from table
+	profiles := make([]Post, 0);
+  for rows.Next() {
+    var user_name string
+    var user_id string
+    var pfp_uid string
+
+    err := rows.Scan(&user_name,
+      &user_id,
+      &pfp_uid);
+
+		if (err != nil) {
+      fmt.Fprintln(w, mkError("cannot fetch random profile"));
+      log.Println(err);
+      return;
+  	}
+
+		profiles = append(profiles, Post{User_name: user_name,
+		  User_id: user_id,
+			User_pfp: pfp_uid,
+			Image_id: pfp_uid});
+	}
+
+	log.Printf("Found %d profiles, expected 1.\n", len(profiles));
+
+	// To json
+  json, err := json.Marshal(profiles);
+	if (err != nil) {
+    fmt.Fprintln(w, mkError("cannot fetch random profile"));
+    log.Println(err);
+    return;
+	}
+
+  ret := string(json);
+  fmt.Fprintln(w, ret);
+}
+
+
 
 func main() {
   log.SetFlags(2 | 3);
@@ -171,6 +247,7 @@ func main() {
   // Setup and start the server
   http.HandleFunc("/", statusHandler);
   http.HandleFunc("/getfeed", getfeed);
+  http.HandleFunc("/getprofile", getprofile);
   log.Fatal(http.ListenAndServe(bindaddr, nil));
 }
 

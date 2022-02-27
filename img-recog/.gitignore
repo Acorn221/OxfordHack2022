@@ -2,4 +2,5 @@ images/
 *.pyc
 __pycache__/
 stderr
+conf.py
 

@@ -1,11 +1,15 @@
 import React from 'react';
 
-const Picture = () => {
+const Picture = ({ subject, photographer, pictureUrl, caption }) => {
   return (
-    <div className="w-full h-full flex flex-col">
-      <img src="https://thumbs.dreamstime.com/z/selfie-times-square-young-man-taking-44840581.jpg" />
+    <div className="w-full max-w-5xl h-full flex flex-col justify-center items-center">
+      <div className="w-full flex flex-col my-4">
+        <p className="text-5xl text-white">{subject}</p>
+        <p className="text-5xl text-white">Taken by: {photographer}</p>
+      </div>
+      <img className="object-contain" src={pictureUrl} />
       <div className="w-full">
-        <p className="text-sm text-white">Hello World</p>
+        <p className="text-3xl text-white">{caption}</p>
       </div>
     </div>
   );
