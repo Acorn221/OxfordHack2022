@@ -34,7 +34,7 @@ const Home = () => {
               key={item['Image_id']}
               photographer={item['User_name']}
               subject={getPeopleInPicture(item['In_image'])}
-              pictureUrl={'http://localhost/cdn/' + item['Image_id']}
+              pictureUrl={'http://localhost/cdn/' + item['Image_id'] + ".jpg"}
             />
           ))}
         </div>

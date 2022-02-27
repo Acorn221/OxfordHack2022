@@ -9,7 +9,8 @@ IMG_CACHE: str = "./images_test/"
 users = [
     ("Shrey", "1f92669d-9617-403c-869e-7e3dacfeddd3__pfp__", 44441),
     ("James", "3452669d-9617-403c-869e-7e9dacfcddd3__pfp__", 44442),
-    ("Charlie", "7772669d-9617-403c-869e-7e9dacfcddd3__pfp__", 44443)
+    ("Charlie", "7772669d-9617-403c-869e-7e9dacfcddd3__pfp__", 44443),
+    ("Obama", "8772669d-9617-403c-869e-7e9dacfcddd3", 44444)
 ]
 
 
@@ -17,12 +18,6 @@ def main():
     f = open(IMG_CACHE + "1.png", "rb")
     test_img = f.read()
     f.close()
-
-    #url = "http://localhost:5000/upload"
-    #headers = {"img-id": str(uuid.uuid4())}
-
-    #r = requests.post(url, data=test_img, headers=headers)
-    #print(r)
 
     conn = psycopg2.connect(database=conf.dbname, user=conf.dbuser, password=conf.dbpassword, host=conf.dburl, port=conf.dbport)
     cur = conn.cursor()

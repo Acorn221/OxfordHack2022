@@ -18,26 +18,29 @@ class UserImage:
     def __init__(self, img_id: str, img_bytes: bytes, is_pfp: bool) -> None:
         self.img_id = img_id
         file_name: str = IMG_CACHE + self.img_id
+        if ".jpg" not in img_id:
+            file_name += ".jpg"
 
         if (img_bytes is not None):
             if is_pfp:
                 # Write the file
-                print(f"Saving {file_name} to the local cache")
-                f = open(file_name + "__pfp__", "wb")
+                _file_name = file_name.split(".jpg")[0] + "__pfp__.jpg"
+                print(f"Saving ./{_file_name} to the local cache")
+                f = open(_file_name, "wb")
                 f.write(img_bytes)
                 f.close()
 
             # Write the file
-            print(f"Saving {file_name} to the local cache")
+            print(f"Saving ./{file_name} to the local cache")
             f = open(file_name, "wb")
             f.write(img_bytes)
             f.close()
 
+        self.encodings = self._getEncodings(file_name)
         if is_pfp:
             # Adding to cache
-            print(f"Adding {img_id} to RAM")
+            print(f"Adding ./{file_name} to RAM")
             self.img_id = img_id
-            self.encodings = self._getEncodings(file_name)
             img_cache.append(self)
 
     def _getEncodings(self, file_name: str):
@@ -48,7 +51,9 @@ def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
     matching_img_ids = []
 
     for image in img_cache:
+        print("E")
         for i in range(len(image.encodings)):
+            print(" E")
             if image.img_id == img_in.img_id:
                 continue
 
@@ -64,13 +69,14 @@ def getOwner(img_in: "Image", captions: str, is_pfp: bool, user_id: str) -> str:
     subjects = []
     cur = conn.cursor()
     for img_id in matching_img_ids:
-        cur.execute("select public.users_in_image.user_id from public.users_in_image where public.users_in_image.image_uid = %s;", (img_id,))
+        cur.execute("select public.image.owner_id from public.users_in_image where public.image.uid = %s;", (img_id,))
 
         rows = cur.fetchall()
         for row in rows:
             subject_id, = row
             if subject_id not in subjects:
                 subjects.append(subject_id)
+                print("Ins")
                 cur.execute("insert into public.users_in_image(user_id, image_uid) values (%s, %s);", (subject_id, img_in.img_id))
 
     cur.execute("insert into public.image(owner_id, captions, uid, processed) values (%s, %s, %s, %s);", (user_id, captions, img_in.img_id, True,))
@@ -101,7 +107,10 @@ async def startupLoadImagesToCache() -> None:
 
     for file in files:
         print(f"Loading file {file} to RAM...")
-        UserImage(file, None, "__pfp__" in file)
+        img = UserImage(file, None, "__pfp__" in file)
+
+        if "__pfp__" in file:
+            print(f"{len(img.encodings)} encodings")
 
     print("Loaded the image cache to RAM")
 
