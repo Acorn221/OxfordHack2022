@@ -92,7 +92,8 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
   	"public.user.id, public.user.pfp_uid, public.image.uid " +
   	"from public.user, " +
   	"public.image " +
-  	"where public.image.processed = true limit 25;");
+  	"where public.image.processed = true and " +
+  	"public.image.owner_id = public.user.id limit 25;");
 	if (err != nil) {
     fmt.Fprintln(w, mkError("cannot fetch posts"));
     log.Println(err);
@@ -184,6 +185,7 @@ func getfeed(w http.ResponseWriter, r *http.Request) {
 
 func getprofile(w http.ResponseWriter, r *http.Request) {
   log.Println("FIX ME");
+}
 
 func main() {
   log.SetFlags(2 | 3);
