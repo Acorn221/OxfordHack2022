@@ -141,3 +141,4 @@ Traceback (most recent call last):
     return getOwner(UserImage(img_id, data, caption, is_pfp))
 TypeError: UserImage.__init__() takes 4 positional arguments but 5 were given
 127.0.0.1 - - [26/Feb/2022 21:58:30] "POST //upload HTTP/1.0" 500 -
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)

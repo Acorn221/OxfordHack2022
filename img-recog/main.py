@@ -7,7 +7,7 @@ import json
 import conf
 import jwt
 
-IMG_CACHE: str = "./images/"
+IMG_CACHE: str = "./images/cdn/"
 IMG_TEST: str = "./images_test/"
 TEST: bool = False
 
@@ -21,7 +21,11 @@ class UserImage:
 
         if (img_bytes is not None):
             if is_pfp:
-                file_name += "__pfp__"
+                # Write the file
+                print(f"Saving {file_name} to the local cache")
+                f = open(file_name + "__pfp__", "wb")
+                f.write(img_bytes)
+                f.close()
 
             # Write the file
             print(f"Saving {file_name} to the local cache")
